@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -506,9 +507,8 @@ class Solution {
         for (int num : nums) {
             if (!counts.containsKey(num)) {
                 counts.put(num, 1);
-            }
-            else {
-                counts.put(num, counts.get(num)+1);
+            } else {
+                counts.put(num, counts.get(num) + 1);
             }
         }
         return counts;
@@ -526,6 +526,227 @@ class Solution {
 
         return majorityEntry.getKey();
     }
+
+    public int numDifferentIntegers(String word) {
+        char[] chars = word.toCharArray();
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < chars.length; i++) {
+            if (!Character.isDigit(chars[i])) {
+                chars[i] = ' ';
+            }
+            stringBuilder.append(chars[i]);
+        }
+
+        Set<BigDecimal> set = new HashSet<>();
+
+        StringTokenizer tokenizer = new StringTokenizer(stringBuilder.toString());
+
+        while (tokenizer.hasMoreTokens()) {
+            set.add(new BigDecimal(tokenizer.nextToken()));
+        }
+
+        return set.size();
+
+    }
+
+    public int countCharacters(String[] words, String chars) {
+        int cnt[] = new int[26], ans = 0;
+        chars.chars().forEach(c -> ++cnt[c - 'a']); // count chars.
+        outer:
+        for (String w : words) {
+            int[] count = cnt.clone();
+            for (char c : w.toCharArray())
+                if (--count[c - 'a'] < 0) // not enough, continue next word in words.
+                    continue outer;
+            ans += w.length();
+        }
+        return ans;
+    }
+
+    public boolean canBeEqual(int[] target, int[] arr) {
+        Arrays.sort(target);
+        Arrays.sort(arr);
+        return Arrays.equals(target, arr);
+    }
+
+    public boolean isPalindrome(int x) {
+        int rev_num = 0;
+        int clone = x;
+        while (x > 0) {
+            rev_num = rev_num * 10 + x % 10;
+            x = x / 10;
+        }
+
+        return clone == rev_num;
+    }
+
+    public List<Integer> selfDividingNumbers(int left, int right) {
+        List<Integer> dictionary = new ArrayList<>();
+        for (int i = left; i <= right; i++) {
+            if (!String.valueOf(i).contains("0")) {
+                if (isSelfDividingNumber(i)) {
+                    dictionary.add(i);
+                }
+            }
+        }
+        return dictionary;
+    }
+
+    public boolean isSelfDividingNumber(int number) {
+        char[] arr = String.valueOf(number).toCharArray();
+        for (char c : arr) {
+            if (number % Integer.parseInt(c + "") != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int[] sortArrayByParity(int[] nums) {
+        int[] result = new int[nums.length];
+        int counter = 0;
+        for (int num : nums) {
+            if (num % 2 == 0) {
+                result[counter] = num;
+                counter++;
+            }
+        }
+
+        for (int num : nums) {
+            if (num % 2 != 0) {
+                result[counter] = num;
+                counter++;
+            }
+        }
+
+        return result;
+
+
+    }
+
+    public int singleNumber(int[] nums) {
+        HashMap<Integer, Integer> hashMap = new HashMap<>();
+
+        for (int num : nums) {
+            if (!hashMap.containsKey(num)) {
+                hashMap.put(num, 1);
+            } else {
+                hashMap.put(num, hashMap.get(num) + 1);
+            }
+        }
+
+        for (Map.Entry<Integer, Integer> value : hashMap.entrySet()) {
+            if (value.getValue() == 1) return value.getKey();
+        }
+
+        return 0;
+    }
+
+    public int[] sumEvenAfterQueries(int[] nums, int[][] queries) {
+        int[] result = new int[queries.length];
+        int sum = 0;
+        for (int element : nums) {
+            if (element % 2 == 0) {
+                sum += element;
+            }
+        }
+
+        int counter = 0;
+
+        for (int i = 0; i < queries.length; i++) {
+            int index = queries[i][1];
+            int value = queries[i][0];
+
+
+            if (nums[index] % 2 == 0) {
+                sum -= nums[index];
+            }
+            nums[index] += value;
+            if (nums[index] % 2 == 0) {
+                sum += nums[index];
+            }
+
+            result[i] = sum;
+        }
+
+        return result;
+    }
+
+    public int[] sortArrayByParityII(int[] nums) {
+        int[] result = new int[nums.length];
+        int odd = 1;
+        int even = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] % 2 == 0) {
+                result[even] = nums[i];
+                even += 2;
+            } else {
+                result[odd] = nums[i];
+                odd += 2;
+            }
+        }
+        return result;
+    }
+
+    public int maxProfit(int[] prices) {
+        int minValue = Integer.MAX_VALUE;
+        int maxProfit = 0;
+
+        for (int price : prices) {
+            if (price < minValue) {
+                minValue = price;
+            } else if (price - minValue > maxProfit) {
+                maxProfit = price - minValue;
+            }
+        }
+        return maxProfit;
+    }
+
+    public boolean validPalindrome(String s) {
+        char[] arr = s.toCharArray();
+        int aPointer = 0;
+        int bPointer = arr.length - 1;
+
+        while (aPointer < bPointer) {
+            if (arr[aPointer] != arr[bPointer]) {
+                return validPalindromeHelper(s, aPointer + 1, bPointer) || validPalindromeHelper(s, aPointer, bPointer - 1);
+            }
+            aPointer++;
+            bPointer--;
+        }
+
+        return true;
+    }
+
+    public boolean validPalindromeHelper(String s, int i, int j) {
+        int aPointer = i;
+        int bPointer = j;
+
+        while (aPointer < bPointer) {
+            if (s.charAt(aPointer) != s.charAt(bPointer)) {
+                return false;
+            }
+            aPointer++;
+            bPointer--;
+        }
+
+        return true;
+
+    }
+
+    public boolean searchMatrix(int[][] matrix, int target) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (matrix[i][j] == target) return true;
+            }
+        }
+
+        return false;
+    }
+
 
 
 }

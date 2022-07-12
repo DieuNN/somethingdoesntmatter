@@ -1,10 +1,8 @@
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println(new Solution().majorityElement(new int[]{3,3,4}));
-
+        System.out.println(new Solution().validPalindrome("abca"));
     }
 }
 
